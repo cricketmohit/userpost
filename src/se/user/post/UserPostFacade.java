@@ -18,5 +18,7 @@ public interface UserPostFacade {
 
 	public String deletePost(int postID)throws BaseException;
 
-	public String searchPost(Post post)throws BaseException;
+	public Post searchPost(Post post)throws BaseException;
+
+	
 }

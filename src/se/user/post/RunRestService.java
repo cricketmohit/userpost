@@ -142,13 +142,14 @@ public class RunRestService {
 	public String searchPost(String str) {
 		Response response = new Response();
 		Gson gson = new Gson();
-		Post post = gson.fromJson(str, Post.class);
-		post.setBody(post.getBody().substring(0, 150));
+		Post postStr = gson.fromJson(str, Post.class);
+		postStr.setBody(postStr.getBody().substring(0, 150));
 		try {
-			String result = "FAILURE";
+			Post post = null;
 			UserPostFacade userFacade = new UserPostFacadeImpl();
-			result = userFacade.searchPost(post);
-			response.setResult(result);
+			post = userFacade.searchPost(post);
+			response.setPost(post);
+			response.setResult("SUCCESS");
 		} catch (BaseException serviceException) {
 			ErrorResultBaseType erBase = new ErrorResultBaseType();
 			erBase.setErrorCode(serviceException.getExceptionCode());
@@ -156,7 +157,6 @@ public class RunRestService {
 			response.setError(erBase);
 			response.setResult("FAILURE");
 		}
-
 		return gson.toJson(response);
 	}
 	

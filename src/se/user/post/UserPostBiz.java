@@ -20,5 +20,7 @@ public interface UserPostBiz {
 
 	public String deletePost(int postID)throws BaseException;
 
+	public Post searchPost(Post post)throws BaseException;
+
 	
 }

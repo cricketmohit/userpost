@@ -67,4 +67,11 @@ public class UserPostFacadeImpl implements UserPostFacade {
 		return result;
 	}
 
+	@Override
+	public Post searchPost(Post post) throws BaseException {
+		UserPostBiz biz = new UserPostBizImpl();
+		Post result = biz.searchPost(post);
+		return result;
+	}
+
 }

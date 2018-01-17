@@ -61,4 +61,11 @@ public class UserPostBizImpl implements UserPostBiz{
 		return result;
 	}
 
+	@Override
+	public Post searchPost(Post post) throws BaseException {
+		UserPostDao dao = new UserPostDaoImpl();
+		Post result = dao.searchPost(post);
+		return result;
+	}
+
 }

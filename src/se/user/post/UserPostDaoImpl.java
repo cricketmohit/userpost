@@ -313,4 +313,47 @@ public class UserPostDaoImpl implements UserPostDao {
 		}
 		return "SUCCESS";
 	}
+
+	@Override
+	public Post searchPost(Post postId) throws BaseException {
+		Connection c = null;
+		Statement stmt = null;
+		String result = "FAILURE";
+		Post post = new Post();
+		try {
+			Class.forName("org.sqlite.JDBC");
+			c = DriverManager.getConnection("jdbc:sqlite:userpost.db");
+			c.setAutoCommit(false);
+
+			StringBuffer query = new StringBuffer(
+					"SELECT * FROM POST where TITLE LIKE '%");
+			query.append(postId.getPostID()).append("%'");
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery(query.toString());
+			if (!rs.isBeforeFirst()) {
+				throw new BaseException("APP-02-02", "Post not available");
+			}
+			while (rs.next()) {
+				post.setUserID(rs.getInt("POSTUSERID"));
+				post.setTitle(rs.getString("TITLE"));
+				post.setBody(rs.getString("BODY"));
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date date = null;
+				try {
+					if (rs.getString("LASTLOGIN") != null) {
+						date = df.parse(rs.getString("DATE"));
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				post.setDate(date);
+			}
+			rs.close();
+			stmt.close();
+			c.close();
+		} catch (Exception e) {
+			throw new BaseException("APP-04-01", e.getMessage());
+		}
+		return post;
+	}
 }

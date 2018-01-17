@@ -16,5 +16,7 @@ public interface UserPostDao{
 	public Post getPostById(int postID)throws BaseException;
 
 	public String deletePost(int postID)throws BaseException;
+
+	public Post searchPost(Post post)throws BaseException;
 	
 }
