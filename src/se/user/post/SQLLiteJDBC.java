@@ -18,6 +18,8 @@ public class SQLLiteJDBC {
 	                        " EMAIL        TEXT NOT NULL, " + 
 	                        " PASSWORD         TEXT NOT NULL, " +
 	                        "LASTLOGIN TEXT   )"; 
+	         
+	         
 	         String sql1 = "CREATE TABLE POST " +
              "(POSTID INT PRIMARY KEY     NOT NULL, " +
              "POSTUSERID INT NOT NULL," +
@@ -34,6 +36,15 @@ public class SQLLiteJDBC {
 						.append("admin").append("', '")
 						.append("admin").append("', '")
 						.append("admin").append("', NULL) ");
+
+				stmt.executeUpdate(sqlBuff.toString());
+				
+			sqlBuff = new StringBuffer(
+						"INSERT INTO POST (POSTID,POSTUSERID,TITLE,BODY,DATE)"
+								+ " VALUES (1, '")
+						.append("1").append("', '")
+						.append("Title 1").append("', '")
+						.append("How are you").append("', datetime('now')) ");
 
 				stmt.executeUpdate(sqlBuff.toString());
 	         stmt.close();

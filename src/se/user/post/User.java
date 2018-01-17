@@ -2,15 +2,15 @@ package se.user.post;
 
 public class User {
 	
-	private String userID; 
+	private int userID; 
 	private String username;
 	private String email; 
 	private String password;
 	
-	public String getUserID() {
+	public int getUserID() {
 		return userID;
 	}
-	public void setUserID(String userID) {
+	public void setUserID(int userID) {
 		this.userID = userID;
 	}
 	public String getUsername() {

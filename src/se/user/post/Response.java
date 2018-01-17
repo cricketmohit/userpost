@@ -1,6 +1,8 @@
 package se.user.post;
 
 public class Response {
+	private User user;
+	private Post post;
 	private String result;
 	private ErrorResultBaseType error;
 
@@ -18,6 +20,22 @@ public class Response {
 
 	public void setResult(String result) {
 		this.result = result;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Post getPost() {
+		return post;
+	}
+
+	public void setPost(Post post) {
+		this.post = post;
 	}
 
 }

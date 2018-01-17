@@ -33,4 +33,38 @@ public class UserPostFacadeImpl implements UserPostFacade {
 		return result;
 	}
 
+	@Override
+	public String checkLoginStatus(int userId) throws BaseException {
+		UserPostBiz biz = new UserPostBizImpl();
+		String result = biz.checkLoginStatus(userId);
+		return result;
+	}
+	@Override
+	public User getUserById(int userId) throws BaseException {
+		UserPostBiz biz = new UserPostBizImpl();
+		User result = biz.getUserById(userId);
+		return result;
+	}
+
+	@Override
+	public String createPost(Post post) throws BaseException {
+		UserPostBiz biz = new UserPostBizImpl();
+		String result = biz.createPost(post);
+		return result;
+	}
+
+	@Override
+	public Post getPostById(int postID) throws BaseException {
+		UserPostBiz biz = new UserPostBizImpl();
+		Post result = biz.getPostById(postID);
+		return result;
+	}
+
+	@Override
+	public String deletePost(int postID) throws BaseException {
+		UserPostBiz biz = new UserPostBizImpl();
+		String result = biz.deletePost(postID);
+		return result;
+	}
+
 }

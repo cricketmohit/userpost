@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -37,23 +36,92 @@ public class RunRestService {
 		}
 	}
 
-	@GET
+	@POST
 	@Path("getUser")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getUser() {
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getUser(String str) {
 
 		Response response = new Response();
-		System.out.println("Inside Method");
-		System.out.println("str");
+		
 		Gson gson = new Gson();
+		User userToGet = gson.fromJson(str, User.class);
+		User user = null;
 		try {
-			// Calling getUser through Facade layer
+			// check for user login
 			UserPostFacade userFacade = new UserPostFacadeImpl();
-
-			response.setResult("Success");
-			if (false) {
-				throw new BaseException("", "");
+			String status = userFacade.checkLoginStatus(userToGet.getUserID());
+			// Calling getUser through Facade layer
+			if(status.equalsIgnoreCase("SUCCESS")){
+				user = userFacade.getUserById(userToGet.getUserID());	
+			}else{
+				throw new BaseException("APP-01-02", "Please Login first, for first time user please register");
 			}
+			
+			response.setResult("Success");
+			response.setUser(user);
+		} catch (BaseException serviceException) {
+			ErrorResultBaseType erBase = new ErrorResultBaseType();
+			erBase.setErrorCode(serviceException.getExceptionCode());
+			erBase.setErrorDescription(serviceException.getMessage());
+			response.setError(erBase);
+		}
+		return gson.toJson(response);
+	}
+	
+	@POST
+	@Path("getPostById")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getPostById(String str) {
+
+		Response response = new Response();
+		Gson gson = new Gson();
+		Post postById = gson.fromJson(str, Post.class);
+		Post post  = null;
+		try {
+			// check for user login
+			UserPostFacade userFacade = new UserPostFacadeImpl();
+			String status = userFacade.checkLoginStatus(postById.getUserID());
+			// Calling getUser through Facade layer
+			if(status.equalsIgnoreCase("SUCCESS")){
+			post = userFacade.getPostById(post.getPostID());	
+			}else{
+				throw new BaseException("APP-01-02", "Please Login first, for first time user please register");
+			}
+			response.setResult("Success");
+			response.setPost(post);
+		} catch (BaseException serviceException) {
+			ErrorResultBaseType erBase = new ErrorResultBaseType();
+			erBase.setErrorCode(serviceException.getExceptionCode());
+			erBase.setErrorDescription(serviceException.getMessage());
+			response.setError(erBase);
+		}
+		return gson.toJson(response);
+	}
+	
+	@POST
+	@Path("createPost")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String createPost(String str) {
+		Response response = new Response();
+		Gson gson = new Gson();
+		Post post = gson.fromJson(str, Post.class);
+		post.setBody(post.getBody().substring(0, 150));
+		try {
+			// check for user login
+			UserPostFacade userFacade = new UserPostFacadeImpl();
+			String status = userFacade.checkLoginStatus(post.getUserID());
+			// Calling create user through Facade layer
+			String result = "FAILURE";
+			if(status.equalsIgnoreCase("SUCCESS")){  
+			result = userFacade.createPost(post);
+			}else{
+				throw new BaseException("APP-01-02", "Please Login first, for first time user please register");
+			}
+
+			response.setResult(result);
 
 		} catch (BaseException serviceException) {
 
@@ -61,11 +129,71 @@ public class RunRestService {
 			erBase.setErrorCode(serviceException.getExceptionCode());
 			erBase.setErrorDescription(serviceException.getMessage());
 			response.setError(erBase);
+			response.setResult("FAILURE");
 		}
 
 		return gson.toJson(response);
 	}
+	
+	@POST
+	@Path("searchPost")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String searchPost(String str) {
+		Response response = new Response();
+		Gson gson = new Gson();
+		Post post = gson.fromJson(str, Post.class);
+		post.setBody(post.getBody().substring(0, 150));
+		try {
+			String result = "FAILURE";
+			UserPostFacade userFacade = new UserPostFacadeImpl();
+			result = userFacade.searchPost(post);
+			response.setResult(result);
+		} catch (BaseException serviceException) {
+			ErrorResultBaseType erBase = new ErrorResultBaseType();
+			erBase.setErrorCode(serviceException.getExceptionCode());
+			erBase.setErrorDescription(serviceException.getMessage());
+			response.setError(erBase);
+			response.setResult("FAILURE");
+		}
 
+		return gson.toJson(response);
+	}
+	
+	@POST
+	@Path("deletePost")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String deletePost(String str) {
+		Response response = new Response();
+		Gson gson = new Gson();
+		Post post = gson.fromJson(str, Post.class);
+		post.setBody(post.getBody().substring(0, 150));
+		try {
+			// check for user login
+			UserPostFacade userFacade = new UserPostFacadeImpl();
+			String status = userFacade.checkLoginStatus(post.getUserID());
+			// Calling create user through Facade layer
+			String result = "FAILURE";
+			if(status.equalsIgnoreCase("SUCCESS")){  
+			result = userFacade.deletePost(post.getPostID());
+			}else{
+				throw new BaseException("APP-01-02", "Please Login first, for first time user please register");
+			}
+
+			response.setResult(result);
+
+		} catch (BaseException serviceException) {
+
+			ErrorResultBaseType erBase = new ErrorResultBaseType();
+			erBase.setErrorCode(serviceException.getExceptionCode());
+			erBase.setErrorDescription(serviceException.getMessage());
+			response.setError(erBase);
+			response.setResult("FAILURE");
+		}
+
+		return gson.toJson(response);
+	}
 	@POST
 	@Path("createUser")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -78,11 +206,8 @@ public class RunRestService {
 			// Calling create user through Facade layer
 			UserPostFacade userFacade = new UserPostFacadeImpl();
 			String result = userFacade.createUser(userToSave);
-
 			response.setResult(result);
-
 		} catch (BaseException serviceException) {
-
 			ErrorResultBaseType erBase = new ErrorResultBaseType();
 			erBase.setErrorCode(serviceException.getExceptionCode());
 			erBase.setErrorDescription(serviceException.getMessage());

@@ -4,22 +4,22 @@ import java.util.Date;
 
 public class Post {
 	
-	private String postID; 
-	private String userID;
+	private int postID; 
+	private int userID;
 	private String title; 
 	private String body;
 	private Date date;
 	
-	public String getPostID() {
+	public int getPostID() {
 		return postID;
 	}
-	public void setPostID(String postID) {
+	public void setPostID(int postID) {
 		this.postID = postID;
 	}
-	public String getUserID() {
+	public int getUserID() {
 		return userID;
 	}
-	public void setUserID(String userID) {
+	public void setUserID(int userID) {
 		this.userID = userID;
 	}
 	public String getTitle() {
