@@ -80,15 +80,26 @@ public class RunRestService {
 		Post postById = gson.fromJson(str, Post.class);
 		Post post  = null;
 		try {
+			SimpleCache cache = new SimpleCache();
 			// check for user login
 			UserPostFacade userFacade = new UserPostFacadeImpl();
-			String status = userFacade.checkLoginStatus(postById.getUserID());
+			String status = userFacade.checkLoginStatus(postById.getPostID());
 			// Calling getUser through Facade layer
+			if(cache.get(String.valueOf(post.getPostID()))==null){
 			if(status.equalsIgnoreCase("SUCCESS")){
+				
 			post = userFacade.getPostById(post.getPostID());	
+			cache.put(String.valueOf(postById.getPostID()), post); 
 			}else{
 				throw new BaseException("APP-01-02", "Please Login first, for first time user please register");
 			}
+			// Cache the Post for 5 min 
+			}else{
+				post =(Post) cache.get(String.valueOf(post.getPostID()));
+			}
+			
+			
+			
 			response.setResult("Success");
 			response.setPost(post);
 		} catch (BaseException serviceException) {
